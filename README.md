@@ -1,7 +1,7 @@
 # ReST-MCTS*: LLM Self-Training via Process Reward Guided Tree Search
 
 <p align="center">
-📃 <a href="https://arxiv.org/abs/" target="_blank">[ReST-MCTS*]</a> 
+📃 <a href="https://arxiv.org/abs/2406.03816" target="_blank">[ReST-MCTS*]</a> 
 <a href="https://github.com/THUDM/ReST-MCTS" target="_blank">[GitHub]</a>
 <a href="https://rest-mcts.github.io/" target="_blank">[Website]</a> <br>
 </p>
@@ -14,6 +14,7 @@ We develop a reinforced self-training approach, called **ReST-MCTS***, based on 
 
 - [Key Differences](#introduction)
 - [Data & Model](#data&model)
+- [Getting Started](#started)
 - [Leaderboard](#Leaderboard)
 - [Citation](#Citation)
 
@@ -30,7 +31,44 @@ Download PRM data:
 Download model:
 [[Hugging Face](https://huggingface.co/zd21/ReST-MCTS-Llama3-8b-Instruct-Policy-1st)]
 
+## **Getting Started**
 
+### **Model Implementation**
+To run MCTS* search, you should implement a policy as well as a process reward model (value model).
+You can directly set these models by providing the model paths in the file `models/model.py`, substituting `INFERENCE_MODEL_DIR`, `VALUE_BASE_MODEL_DIR` and `VALUE_MODEL_STATE_DICT`.
+
+### **Data Preparation**
+Before running search for evaluation or generation, you have to make sure your target question dataset is in the correct format. 
+The data file should be a json file with items in the following format:
+```json
+{
+  "content": "Calculate the sum of the first 10 prime numbers.",
+  "answer": "129"
+}
+```
+The `content` entry is required, serving as the question. While the `answer` entry is optional, it is used for evaluation.
+
+### **Run MCTS\* Search**
+The implementation of MCTS* search can be found in `MCTS`. We provide a search interface in `MCTS/task.py`. To run MCTS* search for a single question, you can refer to the following script:
+
+```python
+from MCTS.task import *
+question = "Calculate the sum of the first 10 prime numbers."
+task = MCTS_Task(question, 'llama', 'local', lang='en')
+output = task.run()
+print(output['solution'])
+```
+
+For evaluation of MCTS* on benchmarks, you can refer to `evalaute.py`, setting the parameter `--mode` to "mcts". You should specify the benchmark name and the exact file (subset) you want to evaluate. A simple demonstration is provided below:
+```bash
+python evaluate.py \
+  --task_name "scibench" \
+  --file "thermo" \
+  --propose_method "gpt" \
+  --value_method "local" \
+  --mode "mcts" \
+  --evaluate "scibench"
+```
 
 ## **Leaderboard**
 
@@ -51,5 +89,12 @@ Accuracy of Different Searches:
 If you find our work helpful, please kindly cite our paper:
 
 ```
-
+@misc{zhang2024restmcts,
+      title={ReST-MCTS*: LLM Self-Training via Process Reward Guided Tree Search}, 
+      author={Dan Zhang and Sining Zhoubian and Yisong Yue and Yuxiao Dong and Jie Tang},
+      year={2024},
+      eprint={2406.03816},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
 ```
