@@ -33,9 +33,19 @@ Download model:
 
 ## **Getting Started**
 
+### **Prepare Env**
+You should install the required packages by running
+```bash
+pip install -r requirements.txt
+```
+Note that for some models on huggingface like the GLM series, you may need to install specific versions of `transformers`.
+
 ### **Model Implementation**
 To run MCTS* search, you should implement a policy as well as a process reward model (value model).
 You can directly set these models by providing the model paths in the file `models/model.py`, substituting `INFERENCE_MODEL_DIR`, `VALUE_BASE_MODEL_DIR` and `VALUE_MODEL_STATE_DICT`.
+However, due to some considerations, we now only provide the implementation of the `llama`, `glm` and `mistral` as policy, with `glm` and `mistral` as value model.
+If you are trying with other models, you can refer to our implementation and modify relevant codes to implement the corresponding models.
+Once you've implemented the policy and value model, you should modify the `LOCAL_INFERENCE_IDX` and `LOCAL_VALUE_IDX` in `models/model.py` to the corresponding model index.
 
 ### **Data Preparation**
 Before running search for evaluation or generation, you have to make sure your target question dataset is in the correct format. 
@@ -67,8 +77,12 @@ python evaluate.py \
   --propose_method "gpt" \
   --value_method "local" \
   --mode "mcts" \
-  --evaluate "scibench"
+  --evaluate "scibench" \
+  --iteration_limit 50 \
+  --use_reflection "simple" \
+  --branch 3
 ```
+You can also refer to the `MCTS/args.md` for more details on the search parameters.
 
 ## **Leaderboard**
 
