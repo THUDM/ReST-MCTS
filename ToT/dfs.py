@@ -3,7 +3,7 @@ from ToT.base import Node, rand_select
 
 def DFS_sub(tot_task, node):
     if node.depth >= tot_task.max_depth:
-        print('达到最大深度限制!\n')
+        print('Maximum depth limit reached!\n')
         return "", node, None
 
     candidates = []
@@ -24,14 +24,14 @@ def DFS_sub(tot_task, node):
         candidates.append(child)
 
     if not candidates:
-        print('未找到合适的下一步!\n')
+        print('No suitable next step was found!\n')
         return "", node, None
     ranked_candidates = sorted(candidates, key=lambda item: item.V, reverse=True)
     if ranked_candidates[0].V >= tot_task.end_gate:
         ranked_candidates[0].final_ans_flag = 1
         return ranked_candidates[0].y, node, ranked_candidates[0]
 
-    # 继续下探
+    # Further probe
     if tot_task.select_method == 'greedy':
         selected = ranked_candidates[:min(tot_task.select_branch, tot_task.branch, len(ranked_candidates))]
 
@@ -57,10 +57,10 @@ def DFS(tot_task):
     root = Node('')
     solution, root, final_node = DFS_sub(tot_task, root)
     if solution:
-        print(f'已找到最终解!\nSolution:{solution}\n')
+        print(f'The final solution has been found!\nSolution:{solution}\n')
         return solution, root, final_node
     else:
         max_node, max_V = root.getBestV()
         max_node.final_ans_flag = 1
-        print(f'未找到满足要求价值的解答，采用最高价值价值解答代替。\nSolution:{max_node.y}\n')
+        print(f'If no solution satisfying the required value is found, the highest value value solution is used instead.\nSolution:{max_node.y}\n')
         return max_node.y, root, max_node

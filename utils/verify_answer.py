@@ -5,7 +5,7 @@ import re
 # only support float answer verification
 def verify_float(answer: float, output: str):
     if not output:
-        print(f'输出为空，无法匹配答案!\n')
+        print(f'The output is empty and cannot match the answer!\n')
         return False
 
     if '综上所述，' in output:
@@ -41,7 +41,7 @@ def verify_float(answer: float, output: str):
             print(f'The ans of model is:{model_ans}, while the ground truth is {answer}.\n')
             return result
         except Exception as e:
-            print(f'匹配答案出错！错误类型:{e}\n')
+            print(f'Result not matched, error type:{e}\n')
             print(f'The ans of model is:{spl_ans}, while the ground truth is {answer}.\n')
             return False
 
@@ -49,7 +49,7 @@ def verify_float(answer: float, output: str):
 # only support choice answer verification
 def verify_choice(answer: str, output: str):
     if not output:
-        print(f'输出为空，无法匹配答案!\n')
+        print(f'The output is empty and cannot match the answer!\n')
         return False
 
     check_list = ['A', 'B', 'C', 'D', 'E']
@@ -83,7 +83,7 @@ def verify_scieval(answer, output, q_type):
         try:
             match = re.findall(r'[A-E]', output)[0]
         except Exception as e:
-            print(f"未匹配到结果，错误类型:{e}\n")
+            print(f"Result not matched, error type:{e}\n")
             return False
         if answer.lower() == match.lower():
             return True

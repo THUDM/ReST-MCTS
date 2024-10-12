@@ -42,11 +42,11 @@ def get_local_response(query, model, tokenizer, max_length=2048, truncation=True
             output = output_.tolist()[0][len(inputs["input_ids"][0]):]
             response = tokenizer.decode(output)
 
-            print(f'获得回复:{response}\n')
+            print(f'obtain response:{response}\n')
             all_response = response
             break
         except Exception as e:
-            print(f'发生错误:{e}，重新获取回复...\n')
+            print(f'Error:{e}, obtain response again...\n')
             cnt -= 1
     if not cnt:
         return []
@@ -81,7 +81,7 @@ def get_local_response_llama(query, model, tokenizer, max_length=2048, truncatio
             all_response = response
             break
         except Exception as e:
-            print(f'发生错误:{e}，重新获取回复...\n')
+            print(f'Error:{e}, obtain response again...\n')
             cnt -= 1
     if not cnt:
         return []
@@ -107,11 +107,11 @@ def get_local_response_mistral(query, model, tokenizer, max_length=1024, truncat
             processed_string = ori_string.split('[/INST]')[1].strip()
             response = processed_string.split('</s>')[0].strip()
 
-            # print(f'获得回复:{response}\n')
+            print(f'obtain response:{response}\n')
             all_response = response
             break
         except Exception as e:
-            print(f'发生错误:{e}，重新获取回复...\n')
+            print(f'Error:{e}, obtain response again...\n')
             cnt -= 1
     if not cnt:
         return []

@@ -46,7 +46,7 @@ if INFERENCE_MODEL_DIR is not None:
     else:
         inference_tokenizer, inference_model = get_inference_model_mistral(INFERENCE_MODEL_DIR)
 
-# implement the value model(reward model)
+# implement the value model (reward model)
 if VALUE_BASE_MODEL_DIR is not None:
     VALUE_LOCAL = True
     value_type = LOCAL_VALUE_TYPES[LOCAL_VALUE_IDX]

@@ -22,6 +22,8 @@ We develop a reinforced self-training approach, called **ReST-MCTS***, based on 
 ![](./assets/comparison.png)
 
 ## **Data & Model**
+Take Llama3-8b-Instruct as an example:
+
 Download policy data:
 [[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS-Llama3-8b-Instruct-Policy-1st)]
 

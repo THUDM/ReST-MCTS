@@ -50,7 +50,7 @@ class CoT_Task(SearchTask):
                                         self.truncation, self.do_sample, 128)
 
                 if not response:
-                    print('获得综述失败！\n')
+                    print('Get summary fail！\n')
                     return ''
                 p = ''
                 for _ in response:
@@ -59,30 +59,30 @@ class CoT_Task(SearchTask):
 
                 if self.evaluate:
                     if len(p) < 1:
-                        print('获得综述过短！\n')
+                        print('Get summary too short！\n')
                         return ''
 
                     if '综上所述，最终答案是:' not in p:
                         summ = '综上所述，最终答案是:' + p
-                        print(f'获得综述:{summ}\n')
+                        print(f'Get summary:{summ}\n')
                         return summ
                     else:
                         summ = '综上所述，最终答案是:' + p.split('综上所述，最终答案是:')[-1]
-                        print(f'获得综述:{summ}\n')
+                        print(f'Get summary:{summ}\n')
                         return summ
 
                 else:
                     if len(p) < 1:
-                        print('获得综述过短！\n')
+                        print('Get summary too short！\n')
                         return ''
 
                     if '综上所述，' not in p:
                         summ = '综上所述，' + p
-                        print(f'获得综述:{summ}\n')
+                        print(f'Get summary:{summ}\n')
                         return summ
                     else:
                         summ = '综上所述，' + p.split('综上所述，')[-1]
-                        print(f'获得综述:{summ}\n')
+                        print(f'Get summary:{summ}\n')
                         return summ
         else:
             if "Summary:" in solution:
@@ -97,14 +97,14 @@ class CoT_Task(SearchTask):
                                 self.max_length,
                                 self.truncation, self.do_sample, 128)
         if not response:
-            print('获得综述失败！\n')
+            print('Get summary fail!\n')
             return ''
         p = ''
         for _ in response:
             p = p + _ + '\n'
         p = p.strip()
 
-        print(f'获得综述:{p}\n')
+        print(f'Get summary:{p}\n')
         return p
 
     def get_self_critic(self, solution):
@@ -138,7 +138,7 @@ class CoT_Task(SearchTask):
         for _ in out:
             solution = solution + _ + '\n'
         solution = solution.strip()
-        print(f'获得解答:{solution}\n')
+        print(f'Get answers:{solution}\n')
 
         if self.evaluate == 'math' or self.verify_method == 'string':
             cnt = 5

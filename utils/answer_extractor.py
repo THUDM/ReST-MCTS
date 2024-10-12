@@ -31,7 +31,7 @@ def extract(answer, q_type):
             return 'None'
     else:
         answer = answer.strip().upper().replace(' ', '').replace(',', '').replace('AND', '').replace(':', '')
-        print(f'处理过的串:{answer}\n')
+        print(f'Processed strings:{answer}\n')
         match1 = re.findall(r'[\[,\{,\(][A-D]+[\],\},\)]', answer)
         match2 = re.findall(r'[\[,\{,\(]-?[0-9]+\.?[0-9]*[\],\},\)]', answer)
         match3 = re.findall(r'ANSWERIS-?[0-9]+\.?[0-9]*', answer)
@@ -61,7 +61,7 @@ def extract(answer, q_type):
         match19 = re.findall(r'ANSWER[\[,\{,\(][A-D][\],\},\)][\[,\{,\(][A-D][\],\},\)]', answer)
 
         if match14:
-            print('答案匹配类型14\n')
+            print('Answer matching type 14\n')
             ans = match14[-1]
             ans = ans[8:]
             final_ans = ''
@@ -72,7 +72,7 @@ def extract(answer, q_type):
                 return final_ans
 
         if match15:
-            print('答案匹配类型15\n')
+            print('Answer matching type 15\n')
             ans = match15[-1]
             ans = ans[8:]
             final_ans = ''
@@ -83,7 +83,7 @@ def extract(answer, q_type):
                 return final_ans
 
         if match16:
-            print('答案匹配类型16\n')
+            print('Answer matching type 16\n')
             ans = match16[-1]
             ans = ans[8:]
             final_ans = ''
@@ -94,7 +94,7 @@ def extract(answer, q_type):
                 return final_ans
 
         if match12:
-            print('答案匹配类型12\n')
+            print('Answer matching type 12\n')
             ans = match12[-1]
             ans = ans[8:]
             final_ans = ''
@@ -105,7 +105,7 @@ def extract(answer, q_type):
                 return final_ans
 
         if match17:
-            print('答案匹配类型17\n')
+            print('Answer matching type 17\n')
             ans = match17[-1]
             ans = ans[6:]
             final_ans = ''
@@ -116,7 +116,7 @@ def extract(answer, q_type):
                 return final_ans
 
         if match18:
-            print('答案匹配类型18\n')
+            print('Answer matching type 18\n')
             ans = match18[-1]
             ans = ans[6:]
             final_ans = ''
@@ -127,7 +127,7 @@ def extract(answer, q_type):
                 return final_ans
 
         if match19:
-            print('答案匹配类型19\n')
+            print('Answer matching type 19\n')
             ans = match19[-1]
             ans = ans[6:]
             final_ans = ''
@@ -138,7 +138,7 @@ def extract(answer, q_type):
                 return final_ans
 
         if match13:
-            print('答案匹配类型13\n')
+            print('Answer matching type 13\n')
             ans = match13[-1]
             ans = ans[6:]
             final_ans = ''
@@ -149,7 +149,7 @@ def extract(answer, q_type):
                 return final_ans
 
         if match10:
-            print('答案匹配类型10\n')
+            print('Answer matching type 10\n')
             ans = match10[-1]
             ans = ans[9:]
             ans = ans[:-1]
@@ -158,10 +158,10 @@ def extract(answer, q_type):
                     float_ans = float(ans)
                     return ans
                 except Exception as e:
-                    print('匹配错误!\n')
+                    print('Matching error!\n')
 
         if match11:
-            print('答案匹配类型11\n')
+            print('Answer matching type 11\n')
             ans = match11[-1]
             ans = ans[7:]
             ans = ans[:-1]
@@ -170,10 +170,10 @@ def extract(answer, q_type):
                     float_ans = float(ans)
                     return ans
                 except Exception as e:
-                    print('匹配错误!\n')
+                    print('Matching error!\n')
 
         if match3:
-            print('答案匹配类型3\n')
+            print('Answer matching type 3\n')
             ans = match3[-1]
             ans = ans[8:]
             if 'MCQ' not in q_type:
@@ -181,17 +181,17 @@ def extract(answer, q_type):
                     float_ans = float(ans)
                     return ans
                 except Exception as e:
-                    print('匹配错误!\n')
+                    print('Matching error!\n')
 
         if match4:
-            print('答案匹配类型4\n')
+            print('Answer matching type 4\n')
             ans = match4[-1]
             ans = ans[8:]
             if 'MCQ' in q_type:
                 return ans
 
         if match5:
-            print('答案匹配类型5\n')
+            print('Answer matching type 5\n')
             ans = match5[-1]
             ans = ans[6:]
             if 'MCQ' not in q_type:
@@ -199,17 +199,17 @@ def extract(answer, q_type):
                     float_ans = float(ans)
                     return ans
                 except Exception as e:
-                    print('匹配错误!\n')
+                    print('Matching error!\n')
 
         if match6:
-            print('答案匹配类型6\n')
+            print('Answer matching type 6\n')
             ans = match6[-1]
             ans = ans[6:]
             if 'MCQ' in q_type:
                 return ans
 
         if match7:
-            print('答案匹配类型7\n')
+            print('Answer matching type 7\n')
             ans = match7[-1]
             final_ans = ''
             for let in ans:
@@ -219,7 +219,7 @@ def extract(answer, q_type):
                 return final_ans
 
         if match8:
-            print('答案匹配类型8\n')
+            print('Answer matching type 8\n')
             ans = match8[-1]
             final_ans = ''
             for let in ans:
@@ -229,7 +229,7 @@ def extract(answer, q_type):
                 return final_ans
 
         if match9:
-            print('答案匹配类型9\n')
+            print('Answer matching type 9\n')
             ans = match9[-1]
             final_ans = ''
             for let in ans:
@@ -239,7 +239,7 @@ def extract(answer, q_type):
                 return final_ans
 
         if match1:
-            print('答案匹配类型1\n')
+            print('Answer matching type 1\n')
             ans = match1[-1]
             ans = ans[1:]
             ans = ans[:-1]
@@ -247,7 +247,7 @@ def extract(answer, q_type):
                 return ans
 
         if match2:
-            print('答案匹配类型2\n')
+            print('Answer matching type 2\n')
             ans = match2[-1]
             ans = ans[1:]
             ans = ans[:-1]
@@ -256,6 +256,6 @@ def extract(answer, q_type):
                     float_ans = float(ans)
                     return ans
                 except Exception as e:
-                    print('匹配错误!\n')
+                    print('Matching error!\n')
         print('answer invalid!\n')
         return 'None'

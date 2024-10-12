@@ -4,11 +4,11 @@ import random
 
 class Node(object):
     def __init__(self, pcd: str, parent=None, depth=0):
-        self.pcd = pcd  # 当前步骤
+        self.pcd = pcd  # current step
         self.children = []
         self.V = 0
         self.parent = parent
-        self.y = ''  # 全部步骤
+        self.y = ''  # overall steps
         self.depth = depth
         self.visit_sequence = 0
         self.final_ans_flag = 0
@@ -28,7 +28,7 @@ class Node(object):
     def update_value(self, value):
         self.V = value
 
-    def getBestV(self):  # 获取子树最大价值节点
+    def getBestV(self):  # Gets the subtree maximum value node
         if not self.children:
             return self, self.V
         max_V = self.V
@@ -60,7 +60,7 @@ class SolutionStep(object):
         self.step_num = step_num
 
 
-def rand_select(data_list: list, probs: list):  # 按概率抽样
+def rand_select(data_list: list, probs: list):  # Sampling by probability
     assert len(data_list) == len(probs), "length do not match!"
     probs_norm = []
     sum_prob = sum(probs)

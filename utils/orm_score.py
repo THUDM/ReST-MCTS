@@ -40,7 +40,7 @@ filter_model.eval()
 def get_orm_score(question, answer):
     with torch.no_grad():
         encoded_pair = tokenizer.encode_plus(
-            question + '【答案】' + answer,
+            question + '[answer]' + answer,
             padding='max_length',
             max_length=max_length,  # Set the max length
             truncation=True,
@@ -63,7 +63,7 @@ def get_orm_scores(outputs):
         question = output['content']
         answer = output['solution']
         score = get_orm_score(question, answer)
-        print(f"获得orm分数:{score}\n")
+        print(f"Get an ORM score :{score}\n")
         scores.append(score)
     return scores
 

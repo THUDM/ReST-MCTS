@@ -63,9 +63,9 @@ def eval_vm(arguments):
             print('evaluate_method not implemented')
             raise NotImplementedError
 
-    print(f'测试准确率:{corr_num / total_num}')
-    print(f'测试总样本数:{total_num}')
-    print(f'测试正确样本数:{corr_num}')
+    print(f'Test accuracy:{corr_num / total_num}')
+    print(f'Total number of samples tested:{total_num}')
+    print(f'Test the correct number of samples:{corr_num}')
 
 
 if __name__ == '__main__':

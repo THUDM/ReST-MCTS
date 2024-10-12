@@ -27,7 +27,7 @@ out_file = f"extracted_samples/self_train_{round_n}/cot/{base}_local_dpo.json"
 
 with open(out_file, "w") as f:
     json.dump(dpo_dataset_dict, f)
-    print("加载入文件完成...")
+    print("Loading the file is complete...")
 
 with open(out_file, 'r') as load_f:
     load_dict = json.load(load_f)

@@ -49,7 +49,7 @@ def randomPolicy(node: treeNode, mcts_task):
         reflection = mcts_task.get_simple_reflection(strs, cur_step)
     node.update_reflection(reflection)
     if reflection == '<end>':
-        print('此步问题已解决，不需要模拟。\n')
+        print('This step has been resolved and does not require simulation.\n')
         return node.V
     for i in range(mcts_task.roll_forward_steps):
         next_steps = get_next_steps_roll(strs, cur_step, mcts_task)
@@ -80,7 +80,7 @@ def greedyPolicy(node: treeNode, mcts_task):
         reflection = mcts_task.get_simple_reflection(strs, cur_step)
     node.update_reflection(reflection)
     if reflection == '<end>':
-        print('此步问题已解决，不需要模拟。\n')
+        print('This step has been resolved and does not require simulation.\n')
         return node.V
     for i in range(mcts_task.roll_forward_steps):
         actions = get_next_steps_roll(strs, cur_step, mcts_task)  # str_list

@@ -15,10 +15,10 @@ def parse_args():
     base_args.add_argument('--file', type=str, default='gsm8k_all')  # json
     base_args.add_argument('--propose_method', type=str, choices=['gpt', 'glm', 'llama', 'mistral', 'local'],
                            default='mistral')
-    base_args.add_argument('--start_num', type=int, default=225)  # 所属题目起始序号(非绝对序号)
+    base_args.add_argument('--start_num', type=int, default=225)  # Starting sequence number (not absolute sequence number)
     base_args.add_argument('--end_num', type=int, default=450)
     base_args.add_argument('--generate_num', type=int, default=256)
-    base_args.add_argument('--do_aggregate', type=bool, default=False)  # 合并结果
+    base_args.add_argument('--do_aggregate', type=bool, default=False)  # aggregate results
 
     arguments = base_args.parse_args()
     return arguments

@@ -44,7 +44,7 @@ class treeNode(object):
     def update_reflection(self, reflection):
         self.reflection = reflection
 
-    def getBestV(self):  # 获取子树最大价值节点
+    def getBestV(self):  # Gets the subtree maximum value node
         if not self.isFullyExpanded:
             return self, self.V
         max_V = self.V

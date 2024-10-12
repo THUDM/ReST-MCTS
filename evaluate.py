@@ -11,7 +11,7 @@ from utils.self_consistency import get_consistency_output_scibench
 
 
 def run(arguments):
-    print('-'*30, '开始测试', '-'*30, '\n')
+    print('-'*30, 'Begin testing', '-'*30, '\n')
     file = f'data/{arguments.task_name}/{arguments.file}.json'
     try:
         data_list = read_json(file)
@@ -26,7 +26,7 @@ def run(arguments):
     correct_count = 0
     for i in range(data_len):
         # solve
-        print(f'开始解答第{i+1}题...\n')
+        print(f'Begin to solve the problem {i+1}...\n')
         data = data_list[i]['content']
         answer = data_list[i]['answer']
         if arguments.mode == 'cot':
@@ -63,11 +63,11 @@ def run(arguments):
             result = verify_float(answer, output['summary'])
             output.update({'answer': answer, 'accurate': result})
             if result:
-                print(f'模型第{i+1}题解答正确。\n')
+                print(f'The answer of problem {i+1} is correct.\n')
                 correct_count += 1
             else:
-                print(f'模型第{i+1}题解答错误。\n')
-        print(f'第{i+1}题解答结束。\n')
+                print(f'The answer of problem {i+1} is wrong.\n')
+        print(f'The solution to problem {i+1} is complete.\n')
 
         # output
         base_dir = os.getcwd()
@@ -80,8 +80,8 @@ def run(arguments):
     print('_' * 60)
     # accuracy
     if args.evaluate:
-        print(f'测试准确率:{correct_count / data_len}\n')
-        print(f'正确题目数:{correct_count}\n总题目数:{data_len}\n')
+        print(f'Test accuracy:{correct_count / data_len}\n')
+        print(f'Correct number of problems:{correct_count}\nTotal number of questions:{data_len}\n')
     print('_' * 60)
 
 
@@ -98,15 +98,15 @@ def parse_args():
     base_args.add_argument('--roll_policy', type=str, choices=['random', 'greedy'], default='greedy')
     base_args.add_argument('--exploration_constant', type=float, default=0.4)
     base_args.add_argument('--roll_forward_steps', type=int, default=2)
-    base_args.add_argument('--end_gate', type=float, default=0.9)  # 结束阈值
+    base_args.add_argument('--end_gate', type=float, default=0.9)  # End threshold
     base_args.add_argument('--branch', type=int, default=3)
     base_args.add_argument('--roll_branch', type=int, default=1)
     base_args.add_argument('--inf', type=float, default=0.8)
-    base_args.add_argument('--evaluate', type=str, default='scibench')  # 是否进行评测(空即不评测)
+    base_args.add_argument('--evaluate', type=str, default='scibench')  # Whether to evaluate (empty means no evaluation)
     base_args.add_argument('--alpha', type=float, default=0.5)
-    base_args.add_argument('--visualize', type=bool, default=False)  # 可视化
-    base_args.add_argument('--use_case_prompt', type=bool, default=False)  # 使用样例提示
-    base_args.add_argument('--use_reflection', type=str, choices=['simple', 'common'], default='simple')  # 使用反思模式
+    base_args.add_argument('--visualize', type=bool, default=False)  # visualization
+    base_args.add_argument('--use_case_prompt', type=bool, default=False)  # Use sample prompts
+    base_args.add_argument('--use_reflection', type=str, choices=['simple', 'common'], default='simple')  # Use reflective mode
     base_args.add_argument('--low', type=float, default=0)
     base_args.add_argument('--high', type=float, default=1)
     base_args.add_argument('--algorithm', type=str, choices=['dfs', 'bfs'], default='dfs')

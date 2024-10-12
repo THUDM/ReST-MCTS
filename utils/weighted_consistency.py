@@ -18,7 +18,7 @@ def get_weighted_consistency_output_scibench(outputs):
                 match = re.findall(r'-?[0-9]+\.?[0-9]*', summ)[-1]
                 model_ans = float(match)
             except Exception as e:
-                print(f'提取答案出错！错误类型:{e}\n')
+                print(f'Extract the answer error! Error type:{e}\n')
                 continue
 
         if model_ans not in output_count.keys():

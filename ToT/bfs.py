@@ -27,7 +27,7 @@ def BFS(tot_task):
             break
         ranked_candidates = sorted(candidates, key=lambda item: item.V, reverse=True)
         if ranked_candidates[0].V >= tot_task.end_gate:
-            print('已找到最终解!\n')
+            print('The final solution has been found!\n')
             ranked_candidates[0].final_ans_flag = 1
             return ranked_candidates[0].y, root, ranked_candidates[0]
 
@@ -44,7 +44,7 @@ def BFS(tot_task):
                     cur_nodes.append(node)
             cur_nodes = sorted(cur_nodes, key=lambda item: item.V, reverse=True)
 
-    print('未找到满足要求价值的解答，采用最高价值价值解答代替。\n')
+    print('If no solution satisfying the required value is found, the highest value value solution is used instead.\n')
     max_node, max_V = root.getBestV()
     max_node.final_ans_flag = 1
     return max_node.y, root, max_node

@@ -11,7 +11,7 @@ def get_proposal(prompt, method='glm', temperature=0.7, max_tokens=2048, seed=17
             response = glm(prompt, BASE_MODEL_GLM, temperature=temperature, max_tokens=max_tokens, seed=seed)
             cnt -= 1
         if not response:
-            print(f'获取<{method}>回复失败!\n')
+            print(f'obtain<{method}>response fail!\n')
             return []
         return response
 
@@ -20,7 +20,7 @@ def get_proposal(prompt, method='glm', temperature=0.7, max_tokens=2048, seed=17
             response = gpt(prompt, model=BASE_MODEL_GPT, temperature=temperature, max_tokens=max_tokens)
             cnt -= 1
         if not response:
-            print(f'获取<{method}>回复失败!\n')
+            print(f'obtain<{method}>response fail!\n')
             return []
         return response
 
@@ -30,12 +30,12 @@ def get_proposal(prompt, method='glm', temperature=0.7, max_tokens=2048, seed=17
                                              max_new_tokens=max_new_tokens, temperature=temperature)
             cnt -= 1
         if not response:
-            print(f'获取<{method}>回复失败!\n')
+            print(f'obtain<{method}>response fail!\n')
             return []
         return response
 
     else:
-        print('尚未支持这种回复获取方法!\n')
+        print('This method of getting responses is not yet supported!\n')
         return []
 
 
@@ -49,7 +49,7 @@ def get_value(prompt_answer, method='glm', temperature=0.7, max_tokens=1000, see
             response = glm(prompt_answer, BASE_MODEL_GLM, temperature=temperature, max_tokens=max_tokens, seed=seed)
             cnt -= 1
         if not response:
-            print(f'获取<{method}>分数失败!\n')
+            print(f'obtain<{method}>score fail!\n')
             return []
         return response
 
@@ -58,7 +58,7 @@ def get_value(prompt_answer, method='glm', temperature=0.7, max_tokens=1000, see
             response = gpt(prompt_answer, model=BASE_MODEL_GPT, temperature=temperature, max_tokens=max_tokens)
             cnt -= 1
         if not response:
-            print(f'获取<{method}>分数失败!\n')
+            print(f'obtain<{method}>score fail!\n')
             return []
         return response
 
@@ -69,10 +69,10 @@ def get_value(prompt_answer, method='glm', temperature=0.7, max_tokens=1000, see
                 value = local_value_model(prompt_answer, max_length=max_length, low=low, high=high)
                 break
             except Exception as e:
-                print(f'获取<{method}>分数失败!\n错误类型:{e}\n')
+                print(f'obtain<{method}>score fail!\nError:{e}\n')
                 cnt -= 1
         return value
 
     else:
-        print('尚未支持这种分数获取方法!\n')
+        print('This method of getting scores is not yet supported!\n')
         return []
