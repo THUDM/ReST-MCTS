@@ -57,7 +57,7 @@ class ToT_Task(SearchTask):
                                 self.max_length,
                                 self.truncation, self.do_sample, self.max_new_tokens)
         if not response:
-            print('获得下一步失败！\n')
+            print('Failed to get next step！\n')
             return ''
 
         if len(response) > 5:
@@ -72,14 +72,14 @@ class ToT_Task(SearchTask):
             if '下一步:' in p:
                 stp = p.split('下一步:')[1].strip()
                 if len(stp) < 2:
-                    print('输出步骤过短！\n')
+                    print('The output step is too short!\n')
                     return ''
                 if stp in y:
-                    print('输出步骤重复！\n')
+                    print('Output step repeat!\n')
                     return ''
 
                 revised_ = '步骤' + str(step_n) + ':' + stp
-                print(f'标准化后新的步骤:{revised_}\n')
+                print(f'New steps after standardization:{revised_}\n')
                 return revised_ + '\n'
 
             elif '步骤' in p and ':' in p:
@@ -87,31 +87,31 @@ class ToT_Task(SearchTask):
                 p_ = p[pre_len:]
                 p_ = p_.split('步骤')[0].strip()
                 if len(p_) < 3:
-                    print('输出步骤过短！\n')
+                    print('The output step is too short！\n')
                     return ''
                 if p_[1:] in y:
-                    print('输出步骤重复！\n')
+                    print('Output step repeat!\n')
                     return ''
 
                 revised_ = '步骤' + str(step_n) + p_
-                print(f'标准化后新的步骤:{revised_}\n')
+                print(f'New steps after standardization:{revised_}\n')
                 return revised_ + '\n'
 
             else:
-                print('输出格式有误！\n')
+                print('Incorrect output format!\n')
                 return ''
         else:
             if "Next step:" in p:
                 stp = p.split('Next step:')[1].strip()
                 if len(stp) < 2:
-                    print('输出步骤过短！\n')
+                    print('The output step is too short！\n')
                     return ''
                 if stp in y:
-                    print('输出步骤重复！\n')
+                    print('Output step repeat!\n')
                     return ''
 
                 revised_ = 'Step ' + str(step_n) + ': ' + stp
-                print(f'标准化后新的步骤:{revised_}\n')
+                print(f'New steps after standardization:{revised_}\n')
                 return revised_ + '\n'
 
             elif "Step" in p and ":" in p:
@@ -119,28 +119,28 @@ class ToT_Task(SearchTask):
                 p_ = p[pre_len:]
                 p_ = p_.split('Step')[0].strip()
                 if len(p_) < 4:
-                    print('输出步骤过短！\n')
+                    print('The output step is too short！\n')
                     return ''
                 p_ = p_[1:].strip()
                 if p_ in y:
-                    print('输出步骤重复！\n')
+                    print('Output step repeat!\n')
                     return ''
 
                 revised_ = 'Step ' + str(step_n) + ': ' + p_
-                print(f'标准化后新的步骤:{revised_}\n')
+                print(f'New steps after standardization:{revised_}\n')
                 return revised_ + '\n'
 
             else:
                 p_ = p.strip()
                 if len(p_) < 3:
-                    print('输出步骤过短！\n')
+                    print('The output step is too short！\n')
                     return ''
                 if p_ in y:
-                    print('输出步骤重复！\n')
+                    print('Output step repeat!\n')
                     return ''
 
                 revised_ = 'Step ' + str(step_n) + ': ' + p_
-                print(f'标准化后新的步骤:{revised_}\n')
+                print(f'New steps after standardization:{revised_}\n')
                 return revised_ + '\n'
 
     def get_step_value(self, y):
@@ -155,7 +155,7 @@ class ToT_Task(SearchTask):
 
             value = get_value(prompt_answer, self.value_method, self.temperature, self.max_tokens, self.seed,
                               self.max_length, self.low, self.high)
-            print(f'获得评分:{value}\n')
+            print(f'Get a score:{value}\n')
             self.value_cache.update({y: value})
             return value
 
@@ -164,7 +164,7 @@ class ToT_Task(SearchTask):
             response = get_value(prompt, self.value_method, self.temperature, self.max_tokens, self.seed,
                                  self.max_length, self.low, self.high)
             value = self.value_outputs_unwrap(response, self.low, self.high)
-            print(f'获得评分:{value}\n')
+            print(f'Get a score:{value}\n')
             self.value_cache.update({y: value})
             return value
 
@@ -182,7 +182,7 @@ class ToT_Task(SearchTask):
                                     self.truncation, self.do_sample, 128)
 
             if not response:
-                print('获得综述失败！\n')
+                print('Failed to get a summary!\n')
                 return ''
             p = ''
             for _ in response:
@@ -191,30 +191,30 @@ class ToT_Task(SearchTask):
 
             if self.evaluate:
                 if len(p) < 1:
-                    print('获得综述过短！\n')
+                    print('Get the summary too short!\n')
                     return ''
 
                 if '综上所述，最终答案是:' not in p:
                     summ = '综上所述，最终答案是:' + p
-                    print(f'获得综述:{summ}\n')
+                    print(f'Get summary:{summ}\n')
                     return summ
                 else:
                     summ = '综上所述，最终答案是:' + p.split('综上所述，最终答案是:')[-1]
-                    print(f'获得综述:{summ}\n')
+                    print(f'Get summary:{summ}\n')
                     return summ
 
             else:
                 if len(p) < 1:
-                    print('获得综述过短！\n')
+                    print('Get the summary too short!\n')
                     return ''
 
                 if '综上所述，' not in p:
                     summ = '综上所述，' + p
-                    print(f'获得综述:{summ}\n')
+                    print(f'Get summary:{summ}\n')
                     return summ
                 else:
                     summ = '综上所述，' + p.split('综上所述，')[-1]
-                    print(f'获得综述:{summ}\n')
+                    print(f'Get summary:{summ}\n')
                     return summ
 
         else:
@@ -223,14 +223,14 @@ class ToT_Task(SearchTask):
                                     self.max_length,
                                     self.truncation, self.do_sample, 128)
             if not response:
-                print('获得综述失败！\n')
+                print('Failed to get a summary!\n')
                 return ''
             p = ''
             for _ in response:
                 p = p + _ + ' '
             summ = p.strip()
 
-            print(f'获得综述:{summ}\n')
+            print(f'Get summary:{summ}\n')
             return summ
 
     def run(self):
