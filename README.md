@@ -13,25 +13,14 @@ We develop a reinforced self-training approach, called **ReST-MCTS***, based on 
 ## **Table of Contents**
 
 - [Key Differences](#introduction)
-- [Data & Model](#data&model)
 - [Getting Started](#started)
+- [Data & Model](#data&model)
+- [Self-training](#Self-training)
 - [Leaderboard](#Leaderboard)
 - [Citation](#Citation)
 
 ## **Key Differences**
 ![](./assets/comparison.png)
-
-## **Data & Model**
-Take Llama3-8b-Instruct as an example:
-
-Download policy data:
-[[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS-Llama3-8b-Instruct-Policy-1st)]
-
-Download PRM data:
-[[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS-Llama3-8b-Instruct-PRM-1st)]
-
-Download model:
-[[Hugging Face](https://huggingface.co/zd21/ReST-MCTS-Llama3-8b-Instruct-Policy-1st)]
 
 ## **Getting Started**
 
@@ -45,7 +34,13 @@ Note that for some models on huggingface like the GLM series, you may need to in
 ### **Model Implementation**
 To run MCTS* search, you should implement a policy as well as a process reward model (value model).
 You can directly set these models by providing the model paths in the file `models/model.py`, substituting `INFERENCE_MODEL_DIR`, `VALUE_BASE_MODEL_DIR` and `VALUE_MODEL_STATE_DICT`.
-However, due to some considerations, we now only provide the implementation of the `llama`, `glm` and `mistral` as policy, with `glm` and `mistral` as value model.
+
+`INFERENCE_MODEL_DIR` is the local path to the policy model, model could be Llama3-8b-Instruct, Mistral-7B: MetaMATH, 
+and SciGLM-6B.
+`VALUE_BASE_MODEL_DIR` is the local path to the value model. Considering the different dependency versions of `transformers`, Mistral-7B is adopted as the backbone of the value model when the policy model is Llama3-8B-Instruct or Mistral-7B: MetaMATH. When the policy model is SciGLM, we use ChatGLM3-6b-base as the backbone of the value model.
+You can load the model and get the `VALUE_MODEL_STATE_DICT`.
+
+We now only provide the implementation of the `llama`, `glm` and `mistral` as policy, with `glm` and `mistral` as value model.
 If you are trying with other models, you can refer to our implementation and modify relevant codes to implement the corresponding models.
 Once you've implemented the policy and value model, you should modify the `LOCAL_INFERENCE_IDX` and `LOCAL_VALUE_IDX` in `models/model.py` to the corresponding model index.
 
@@ -85,6 +80,30 @@ python evaluate.py \
   --branch 3
 ```
 You can also refer to the `MCTS/args.md` for more details on the search parameters.
+
+## **Data & Model (take Llama3-8B-Instruct as an example)**
+Aiming to gather value train data for science, we integrate questions of a lean science dataset $D_{sci}$ within <a href="https://rest-mcts.github.io/" target="_blank">[SciInstruct]</a> to construct $D_{V_0}$. This dataset consists of 11,554 questions, where each question is paired with a correct step-by-step solution. (See Section 4.1 of the paper for more details.)
+Then, we use $D_V0$ to train Mistral-7B: MetaMATH as the initial process reward model.
+
+Given question set $D_G$, we use Llama3-8B-Instruct to generate synthetic data for policy model and value model. (See Algorithm 1 of the paper for more details.)
+
+Download policy data (positive samples) for training 1st policy model (Llama3-8b-Instruct):
+[[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS-Llama3-8b-Instruct-Policy-1st)]
+
+Download PRM data (positive and negative samples) for training 1st reward model (Mistral-7B: MetaMATH):
+[[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS-Llama3-8b-Instruct-PRM-1st)]
+
+Download the trained policy model:
+[[Hugging Face](https://huggingface.co/zd21/ReST-MCTS-Llama3-8b-Instruct-Policy-1st)]
+
+## **Self-training**
+For our methods:
+
+Regarding Llama3-8B-Instruct and Mistral-7B: MetaMATH, we use the default repo of <a href="https://github.com/TIGER-AI-Lab/MAmmoTHhttps://github.com/TIGER-AI-Lab/MAmmoTH" target="_blank">[MAmmoTH]</a> to train the policy model and evaluate.
+
+Regarding SciGLM-6B, we use the default repo of <a href="https://github.com/THUDM/SciGLM" target="_blank">[SciGLM]</a> to train the policy model and evaluate.
+
+We also implement self-rewarding as our baseline in ./self_train/self_train_dpo.py.
 
 ## **Leaderboard**
 
