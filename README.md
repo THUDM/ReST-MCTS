@@ -25,22 +25,37 @@ We develop a reinforced self-training approach, called **ReST-MCTS***, based on 
 ## **Getting Started**
 
 ### **Prepare Env**
-You should install the required packages by running
+Considering the different dependency versions of `transformers` for Mistral (or Llama) and SciGLM, you should install different environments through miniconda and install corresponding required packages by:
+ 
+running Mistral (or Llama)
 ```bash
-pip install -r requirements.txt
+pip install -r requirements_mistral.txt
+```
+
+or running SciGLM
+```bash
+pip install -r requirements_sciglm.txt
 ```
 Note that for some models on huggingface like the GLM series, you may need to install specific versions of `transformers`.
 
 ### **Model Implementation**
+#### **MCTS* Search**
 To run MCTS* search, you should implement a policy as well as a process reward model (value model).
 You can directly set these models by providing the model paths in the file `models/model.py`, substituting `INFERENCE_MODEL_DIR`, `VALUE_BASE_MODEL_DIR` and `VALUE_MODEL_STATE_DICT`.
 
-`INFERENCE_MODEL_DIR` is the local path to the policy model, model could be Llama3-8b-Instruct, Mistral-7B: MetaMATH, 
-and SciGLM-6B.
-`VALUE_BASE_MODEL_DIR` is the local path to the value model. Considering the different dependency versions of `transformers`, Mistral-7B is adopted as the backbone of the value model when the policy model is Llama3-8B-Instruct or Mistral-7B: MetaMATH. When the policy model is SciGLM, we use ChatGLM3-6b-base as the backbone of the value model.
-You can load the model and get the `VALUE_MODEL_STATE_DICT`.
+##### **Policy Model**
+`INFERENCE_MODEL_DIR` is the local path to the policy model, model could be Llama3-8b-Instruct, Mistral-7B: MetaMATH, and SciGLM-6B.
 
-We now only provide the implementation of the `llama`, `glm` and `mistral` as policy, with `glm` and `mistral` as value model.
+##### **Process Reward Model**
+`VALUE_BASE_MODEL_DIR` is the local path to the value model. Considering the different dependency versions of `transformers`, Mistral-7B is adopted as the backbone of the value model when the policy model is Llama3-8B-Instruct or MetaMATH: Mistral-7B. When the policy model is SciGLM, we use ChatGLM3-6B as the backbone of the value model.
+
+Aiming to gather value train data for science, we integrate questions of a lean science dataset $D_{sci}$ within <a href="https://rest-mcts.github.io/" target="_blank">[SciInstruct]</a> to construct $D_{V_0}$. This dataset consists of 11,554 questions, where each question is paired with a correct step-by-step solution. (See Section 4.1 of the paper for more details.)
+
+You can download [[$D_{V_0}$](https://huggingface.co/datasets/zd21/ReST-MCTS-PRM-0th)] and put them in `PRM/data` to train Mistral-7B as the initial process reward model and obtain `VALUE_MODEL_STATE_DICT`.
+We also provide `PRM/train_VM_chatglm.py` and `PRM/train_VM_mistral.py`.
+
+##### **Model Setting**
+We now only provide the implementation of the `llama`, `glm` and `mistral` as policy, with `glm` and `mistral` as value model in `models/model.py`.
 If you are trying with other models, you can refer to our implementation and modify relevant codes to implement the corresponding models.
 Once you've implemented the policy and value model, you should modify the `LOCAL_INFERENCE_IDX` and `LOCAL_VALUE_IDX` in `models/model.py` to the corresponding model index.
 
@@ -82,10 +97,7 @@ python evaluate.py \
 You can also refer to the `MCTS/args.md` for more details on the search parameters.
 
 ## **Data & Model (take Llama3-8B-Instruct as an example)**
-Aiming to gather value train data for science, we integrate questions of a lean science dataset $D_{sci}$ within <a href="https://rest-mcts.github.io/" target="_blank">[SciInstruct]</a> to construct $D_{V_0}$. This dataset consists of 11,554 questions, where each question is paired with a correct step-by-step solution. (See Section 4.1 of the paper for more details.)
-Then, we use $D_V0$ to train Mistral-7B: MetaMATH as the initial process reward model.
-
-Given question set $D_G$, we use Llama3-8B-Instruct to generate synthetic data for policy model and value model. (See Algorithm 1 of the paper for more details.)
+Given question set $D_G$, we use Llama3-8B-Instruct guided by MCTS* to generate synthetic data for policy model and value model. (See Algorithm 1 of the paper for more details.)
 
 Download policy data (positive samples) for training 1st policy model (Llama3-8b-Instruct):
 [[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS-Llama3-8b-Instruct-Policy-1st)]
@@ -115,7 +127,7 @@ Accuracy of Different Verifiers:
 
 ![](./assets/vm_results.png)
 
-Accuracy of Different Searches:
+Accuracy of Different Searches (we also provide the plot code in `figures/plot_math_self_training.py`):
 
 ![](./assets/searches.png)
 
@@ -124,12 +136,10 @@ Accuracy of Different Searches:
 If you find our work helpful, please kindly cite our paper:
 
 ```
-@misc{zhang2024restmcts,
-      title={ReST-MCTS*: LLM Self-Training via Process Reward Guided Tree Search}, 
-      author={Dan Zhang and Sining Zhoubian and Yisong Yue and Yuxiao Dong and Jie Tang},
-      year={2024},
-      eprint={2406.03816},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL}
+@article{zhang2024rest,
+  title={ReST-MCTS*: LLM Self-Training via Process Reward Guided Tree Search},
+  author={Zhang, Dan and Zhoubian, Sining and Hu, Ziniu and Yue, Yisong and Dong, Yuxiao and Tang, Jie},
+  journal={arXiv preprint arXiv:2406.03816},
+  year={2024}
 }
 ```

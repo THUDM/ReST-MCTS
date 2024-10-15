@@ -21,12 +21,14 @@ BASE_MODEL_GLM = 'GLM4'
 
 # local model settings
 # if you want to use local models, set these two directories
-
+# INFERENCE_MODEL_DIR = "/workspace/ckpt/Meta-Llama-3-8B-Instruct"
 INFERENCE_MODEL_DIR = None
 LOCAL_INFERENCE_TYPES = ['glm', 'llama', 'mistral']
 LOCAL_INFERENCE_IDX = 0
 
+# VALUE_BASE_MODEL_DIR = "/workspace/ckpt/MetaMath-Mistral-7B"
 VALUE_BASE_MODEL_DIR = None
+# VALUE_MODEL_STATE_DICT = "/Path/to/PRM/records/Mistral/VM_best_checkpoint.pt"
 VALUE_MODEL_STATE_DICT = None
 LOCAL_VALUE_TYPES = ['glm', 'mistral']
 LOCAL_VALUE_IDX = 0
