@@ -20,6 +20,7 @@ We develop a reinforced self-training approach, called **ReST-MCTS***, based on 
 - [Citation](#Citation)
 
 ## **Key Differences**
+We summary the key differences between existing self-improvement methods and our approach. Train refers to whether to train a reward model.
 ![](./assets/comparison.png)
 
 ## **Getting Started**
@@ -38,21 +39,29 @@ pip install -r requirements_sciglm.txt
 ```
 Note that for some models on huggingface like the GLM series, you may need to install specific versions of `transformers`.
 
+The Python version for running GLM is 3.11. The Python version for running Mistral or Llama is 3.12.
+
 ### **Model Implementation**
-#### **MCTS* Search**
+#### **MCTS\* Search**
 To run MCTS* search, you should implement a policy as well as a process reward model (value model).
-You can directly set these models by providing the model paths in the file `models/model.py`, substituting `INFERENCE_MODEL_DIR`, `VALUE_BASE_MODEL_DIR` and `VALUE_MODEL_STATE_DICT`.
+You can download initial checkpoint and directly set these models by providing the model paths in the file `models/model.py`, substituting `INFERENCE_MODEL_DIR`, `VALUE_BASE_MODEL_DIR` and `VALUE_MODEL_STATE_DICT`.
 
 ##### **Policy Model**
-`INFERENCE_MODEL_DIR` is the local path to the policy model, model could be Llama3-8b-Instruct, Mistral-7B: MetaMATH, and SciGLM-6B.
+`INFERENCE_MODEL_DIR` is the local path to the policy model, model could be <a href="https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct/" target="_blank">[Llama3-8B-Instruct]</a>, <a href="https://huggingface.co/meta-math/MetaMath-Mistral-7B" target="_blank">[Mistral-7B: MetaMATH]</a>, and <a href="https://huggingface.co/zd21/SciGLM-6B" target="_blank">[SciGLM-6B]</a>.
 
 ##### **Process Reward Model**
-`VALUE_BASE_MODEL_DIR` is the local path to the value model. Considering the different dependency versions of `transformers`, Mistral-7B is adopted as the backbone of the value model when the policy model is Llama3-8B-Instruct or MetaMATH: Mistral-7B. When the policy model is SciGLM, we use ChatGLM3-6B as the backbone of the value model.
+`VALUE_BASE_MODEL_DIR` is the local path to the value model. Considering the different dependency versions of `transformers`, Mistral-7B is adopted as the backbone of the value model when the policy model is <a href="https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct/" target="_blank">[Llama3-8B-Instruct]</a> or <a href="https://huggingface.co/meta-math/MetaMath-Mistral-7B" target="_blank">[Mistral-7B: MetaMATH]</a>. When the policy model is <a href="https://huggingface.co/zd21/SciGLM-6B" target="_blank">[SciGLM-6B]</a>, we use <a href="https://huggingface.co/THUDM/chatglm3-6b" target="_blank">[ChatGLM3-6B]</a> as the backbone of the value model.
 
-Aiming to gather value train data for science, we integrate questions of a lean science dataset $D_{sci}$ within <a href="https://rest-mcts.github.io/" target="_blank">[SciInstruct]</a> to construct $D_{V_0}$. This dataset consists of 11,554 questions, where each question is paired with a correct step-by-step solution. (See Section 4.1 of the paper for more details.)
+Aiming to gather value train data for science, we integrate questions of a lean science dataset $D_{sci}$ within <a href="https://rest-mcts.github.io/" target="_blank">[SciInstruct]</a> to construct $D_{V_0}$. This dataset consists of 11,554 questions, where each question is paired with a correct step-by-step solution. (See **Fine-grained dataset for science and math.** in Section 4.1 of <a href="https://arxiv.org/pdf/2406.03816" target="_blank">[the paper]</a> for more details.)
 
 You can download [[$D_{V_0}$](https://huggingface.co/datasets/zd21/ReST-MCTS-PRM-0th)] and put them in `PRM/data` to train Mistral-7B as the initial process reward model and obtain `VALUE_MODEL_STATE_DICT`.
 We also provide `PRM/train_VM_chatglm.py` and `PRM/train_VM_mistral.py`.
+
+The experimental settings are as follows:
+
+For ChatGLM3-6B, learning rate (lr) is 2e-5, the number of epochs is 2 or 3, and batch size is 3.
+
+For Mistral, learning rate (lr) is 3e-6, the number of epochs is 2 or 3, and batch size is 3.
 
 ##### **Model Setting**
 We now only provide the implementation of the `llama`, `glm` and `mistral` as policy, with `glm` and `mistral` as value model in `models/model.py`.
@@ -81,7 +90,7 @@ output = task.run()
 print(output['solution'])
 ```
 
-For evaluation of MCTS* on benchmarks, you can refer to `evalaute.py`, setting the parameter `--mode` to "mcts". You should specify the benchmark name and the exact file (subset) you want to evaluate. A simple demonstration is provided below:
+For evaluation of MCTS* on benchmarks, you can refer to `evaluate.py`, setting the parameter `--mode` to "mcts". You should specify the benchmark name and the exact file (subset) you want to evaluate. A simple demonstration is provided below:
 ```bash
 python evaluate.py \
   --task_name "scibench" \
@@ -97,7 +106,7 @@ python evaluate.py \
 You can also refer to the `MCTS/args.md` for more details on the search parameters.
 
 ## **Data & Model (take Llama3-8B-Instruct as an example)**
-Given question set $D_G$, we use Llama3-8B-Instruct guided by MCTS* to generate synthetic data for policy model and value model. (See Algorithm 1 of the paper for more details.)
+Given question set $D_G$, we use Llama3-8B-Instruct guided by MCTS* to generate synthetic data for policy model and value model. (See **Algorithm 1** of <a href="https://arxiv.org/pdf/2406.03816" target="_blank">[the paper]</a> for more details.)
 
 Download policy data (positive samples) for training 1st policy model (Llama3-8b-Instruct):
 [[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS-Llama3-8b-Instruct-Policy-1st)]

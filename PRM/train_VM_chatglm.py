@@ -97,8 +97,8 @@ VM.to(device)
 
 # Define loss function and optimizer
 criterion = nn.MSELoss()
-optimizer = AdamW(VM.parameters(), lr=3e-6)
-num_epochs = 2
+optimizer = AdamW(VM.parameters(), lr=2e-5)
+num_epochs = 2 # or 3 
 # Training and validation loop
 best_val_loss = 10000000
 train_losses = []

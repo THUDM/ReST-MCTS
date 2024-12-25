@@ -19,8 +19,8 @@ tokenizer = AutoTokenizer.from_pretrained(model_dir)
 model_config = model.config
 
 # data
-# d_path = "extracted_samples/self_train/cot/llama_local_critic_dpo.json"
-d_path = "extracted_samples/self_train/cot/mistral_local_critic_dpo.json"
+# d_path = "data/extracted_samples/self_train/cot/llama_local_critic_dpo.json"
+d_path = "data/extracted_samples/self_train/cot/mistral_local_critic_dpo.json"
 data_dict = read_json(d_path)[0]
 d_len = len(data_dict['prompt'])
 assert d_len == len(data_dict['chosen']) and d_len == len(data_dict['rejected'])
