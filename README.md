@@ -106,16 +106,55 @@ python evaluate.py \
 You can also refer to the `MCTS/args.md` for more details on the search parameters.
 
 ## **Data & Model (take Llama3-8B-Instruct as an example)**
-Given question set $D_G$, we use Llama3-8B-Instruct guided by MCTS* to generate synthetic data for policy model and value model. (See **Algorithm 1** of <a href="https://arxiv.org/pdf/2406.03816" target="_blank">[the paper]</a> for more details.)
+Given question set $D_G$, we use three backbones (Llama3-8B-Instruct, Mistral-7b: MetaMATH, and SciGLM-6B) guided by MCTS* to generate synthetic data for policy model and value model. (See **Algorithm 1** of <a href="https://arxiv.org/pdf/2406.03816" target="_blank">[the paper]</a> for more details.)
 
-Download policy data (positive samples) for training 1st policy model (Llama3-8b-Instruct):
-[[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS-Llama3-8b-Instruct-Policy-1st)]
+### Policy Data
 
-Download PRM data (positive and negative samples) for training 1st reward model (Mistral-7B: MetaMATH):
+Download policy data for training and comparing 1st policy model. Noting that CoT and MCTS only include positive samples. DPO includes both positive and negative samples.
+
+| Backbone             | Iteration | Self-Training        | Full Name                                                     | Link                                                                                                                 |
+|----------------------|-----------|----------------------|---------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|
+| Llama3-8b-Instruct   | 1st       | ReST-EM (CoT)        | ReST-MCTS_Llama3-8b-Instruct_ReST-EM-CoT_1st                  | [[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS_Llama3-8b-Instruct_ReST-EM-CoT_1st)]                  |
+|                      |           | Self-Rewarding (DPO) | ReST-MCTS_Llama3-8b-Instruct_Self-Rewarding-DPO_1st           | [[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS_Llama3-8b-Instruct_Self-Rewarding-DPO_1st)]           |
+|                      |           | ReST-MCTS            | ReST-MCTS_Llama3-8b-Instruct_ReST-MCTS_Policy_1st             | [[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS_Llama3-8b-Instruct_ReST-MCTS_Policy_1st)]             |
+|                      |           |                      |                                                               |                                                                                                                      |
+| Mistral: MetaMATH-7b | 1st       | ReST-EM (CoT)        | ReST-MCTS_Mistral-MetaMATH-7b-Instruct_ReST-EM-CoT_1st        | [[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS_Mistral-MetaMATH-7b-Instruct_ReST-EM-CoT_1st)]        |
+|                      |           | Self-Rewarding (DPO) | ReST-MCTS_Mistral-MetaMATH-7b-Instruct_Self-Rewarding-DPO_1st | [[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS_Mistral-MetaMATH-7b-Instruct_Self-Rewarding-DPO_1st)] |
+|                      |           | ReST-MCTS            | ReST-MCTS_Mistral-MetaMATH-7b-Instruct_ReST-MCTS_1st          | [[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS_Mistral-MetaMATH-7b-Instruct_ReST-MCTS_1st)]          |
+|                      |           |                      |                                                               |                                                                                                                      |
+| SciGLM-6B            | 1st       | ReST-EM (CoT)        | ReST-MCTS_SciGLM-6B_ReST-EM-CoT_1st                           | [[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS_SciGLM-6B_ReST-EM-CoT_1st)]                           |
+|                      |           | Self-Rewarding (DPO) | ReST-MCTS_SciGLM-6B_Self-Rewarding-DPO_1st                    | [[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS_SciGLM-6B_Self-Rewarding-DPO_1st)]                    |
+|                      |           | ReST-MCTS            | ReST-MCTS_SciGLM-6B_ReST-MCTS_Policy_1st                      | [[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS_SciGLM-6B_ReST-MCTS_Policy_1st)]                      |
+|                      |           |                      |                                                               |                                                                                                                      |
+|                      |           |                      |                                                               |                                                                                                                      |
+
+
+Download policy data for training and comparing 2nd policy model. 
+
+| Backbone             | Iteration | Self-Training        | Full Name                                                     | Link                                                                                                                 |
+|----------------------|-----------|----------------------|---------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|
+| Llama3-8b-Instruct   |  2nd       | ReST-EM (CoT)        | ReST-MCTS_Llama3-8b-Instruct_ReST-EM-CoT_2nd                  | [[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS_Llama3-8b-Instruct_ReST-EM-CoT_2nd)]                  |
+|                      |           | Self-Rewarding (DPO) | ReST-MCTS_Llama3-8b-Instruct_Self-Rewarding-DPO_2nd           | [[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS_Llama3-8b-Instruct_Self-Rewarding-DPO_2nd)]           |
+|                      |           | ReST-MCTS            | ReST-MCTS_Llama3-8b-Instruct_ReST-MCTS_Policy_2nd             | [[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS_Llama3-8b-Instruct_ReST-MCTS_Policy_2nd)]             |
+|                      |           |                      |                                                               |                                                                                                                      |
+| Mistral: MetaMATH-7b |  2nd       | ReST-EM (CoT)        | ReST-MCTS_Mistral-MetaMATH-7b-Instruct_ReST-EM-CoT_2nd        | [[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS_Mistral-MetaMATH-7b-Instruct_ReST-EM-CoT_2nd)]        |
+|                      |           | Self-Rewarding (DPO) | ReST-MCTS_Mistral-MetaMATH-7b-Instruct_Self-Rewarding-DPO_2nd | [[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS_Mistral-MetaMATH-7b-Instruct_Self-Rewarding-DPO_2nd)] |
+|                      |           | ReST-MCTS            | ReST-MCTS_Mistral-MetaMATH-7b-Instruct_ReST-MCTS_2nd          | [[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS_Mistral-MetaMATH-7b-Instruct_ReST-MCTS_2nd)]          |
+|                      |           |                      |                                                               |                                                                                                                      |
+| SciGLM-6B            |  2nd       | ReST-EM (CoT)        | ReST-MCTS_SciGLM-6B_ReST-EM-CoT_2nd                           | [[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS_SciGLM-6B_ReST-EM-CoT_2nd)]                           |
+|                      |           | Self-Rewarding (DPO) | ReST-MCTS_SciGLM-6B_Self-Rewarding-DPO_2nd                    | [[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS_SciGLM-6B_Self-Rewarding-DPO_2nd)]                    |
+|                      |           | ReST-MCTS            | ReST-MCTS_SciGLM-6B_ReST-MCTS_Policy_2nd                      | [[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS_SciGLM-6B_ReST-MCTS_Policy_2nd)]                      |
+|                      |           |                      |                                                               |                                                                                                                      |
+|                      |           |                      |                                                               |                                                                                                                      |
+
+
+### PRM Data
+Download PRM data (positive and negative samples) for training 1st reward model (Llama3-8b-Instruct):
 [[Hugging Face](https://huggingface.co/datasets/zd21/ReST-MCTS-Llama3-8b-Instruct-PRM-1st)]
 
+<!-- ### Policy Model
 Download the trained policy model:
-[[Hugging Face](https://huggingface.co/zd21/ReST-MCTS-Llama3-8b-Instruct-Policy-1st)]
+[[Hugging Face](https://huggingface.co/zd21/ReST-MCTS-Llama3-8b-Instruct-Policy-1st)] -->
 
 ## **Self-training**
 For our methods:
